@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+#　Git Alias
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+git config --global alias.st status
 
-## Getting Started
+# Overview
+Sample program to build MySQL and Fast API environment with DockerCompose
 
-First, run the development server:
+# Install
+Create and Running
+```
+$ docker-compose up -d --build
 
-```bash
-npm run dev
-# or
-yarn dev
+# Debug Mode 
+$ docker-compose -f debug-docker-compose.yml up --build -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Demo
+## Document of API
+http://localhost:8000/docs
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+#Debug Mode
+http://localhost:8080/docs
+You can try GET, POST, PUT
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# Show Database
+$ docker exec -it db bash
 
-## Learn More
+$ mysql -u user -h 127.0.0.1 -D order -p
+$ password
+$ show databases;
 
-To learn more about Next.js, take a look at the following resources:
+$ show variables like "char%";
+## ex) GET
+```
+$ curl -X GET "http://localhost:8000/users" -H "accept: application/json"
+```
+Result
+```
+[{"id":1,"age":15,"name":"太郎"},{"id":2,"age":18,"name":"次郎"},{"id":3,"age":20,"name":"花子"}]
+```
+## ex) POST
+```
+$ curl -X POST "http://localhost:8000/user?name=士郎&age=10" -H "accept: application/json"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Result
+```
+[{"id":1,"age":15,"name":"太郎"},{"id":2,"age":18,"name":"次郎"},{"id":3,"age":20,"name":"花子"},{"id":4,"age":10,"name":"士郎"}]
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## ex) PUT
+```
+$ curl -X PUT "http://localhost:8000/users" -H "accept: application/json" -H "Content-Type: application/json" -d "[{\"id\":2,\"name\":\"次郎\",\"age\":13}]"
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Result
+```
+[{"id":1,"age":15,"name":"太郎"},{"id":2,"age":13,"name":"次郎"},{"id":3,"age":20,"name":"花子"},{"id":4,"age":10,"name":"士郎"}]
+```
